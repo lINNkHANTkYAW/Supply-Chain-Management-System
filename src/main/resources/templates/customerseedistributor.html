@@ -1,0 +1,110 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .profile-header {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+
+  .profile-image {
+    position: absolute;
+    bottom: -50px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid white;
+    border-radius: 50%;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+  }
+  .edit-buttons {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+  .container{
+    background-color: #e5e5e5;
+    padding: 20px;
+    border-radius: 10px;
+  }
+</style>
+<script th:inline="javascript">
+        /*<![CDATA[*/
+        const userId = /*[[${session.loggedInUser.userId}]]*/ null;
+        /*]]>*/
+    </script>
+
+<body>
+            <!--=============== MAIN ===============-->
+        <main class="main container-fluid" id="main">
+            <div class="profile-header mb-5">
+                <img id="profileImage" th:src="@{img/default-profile.jpg}" alt="Profile Image" class="profile-image">
+            </div>
+        
+            <div class="card mb-5" style="color: black;">
+                <div class="card-header">
+                    <h4 style="color: rgb(14, 45, 132);">User Information</h4>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> <span id="displayName"></span></p>
+                    <p><strong>Email:</strong> <span id="displayEmail"></span></p>
+                    <p><strong>Phone:</strong> <span id="displayPhone"></span></p>
+                    <p><strong>Bio:</strong> <span id="displayBio"></span></p>
+                </div>
+            </div>
+        </main>
+        
+</body>
+
+<script>
+//Function to get the value of a query parameter by name
+
+function getQueryParam(name) {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get(name);
+}
+//Fetch distributor data using the distributorId
+async function fetchDistributorProfile() {
+    const distributorId = getQueryParam('distributorId');  // Get distributorId from URL
+
+    if (!distributorId) {
+        console.error('No distributor ID found in the URL');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/distributors/${distributorId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            // Populate the HTML with the fetched data
+            document.getElementById('displayName').textContent = data.companyName;
+            document.getElementById('displayEmail').textContent = data.email;
+            document.getElementById('displayPhone').textContent = data.contactInfo;
+            document.getElementById('displayBio').textContent = data.bio;
+            // Set profile image if available
+            document.getElementById('profileImage').src = data.profileImg || 'img/default-profile.jpg';
+        } else {
+            console.error('Failed to fetch distributor data');
+        }
+    } catch (error) {
+        console.error('Error fetching distributor data:', error);
+    }
+}
+
+// Call the function when the page loads
+window.onload = function () {
+    fetchDistributorProfile();
+};
+</script>
+</html>

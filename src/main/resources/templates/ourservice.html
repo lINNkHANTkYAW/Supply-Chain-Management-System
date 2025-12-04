@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Services - Supply Chain Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ2QY3fHhJ9D9NwANXI4kc1y2xw2bI5bKwWlkgK+6ZR0aXaym55C8QX4v4f4" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: 'Arial', sans-serif;
+    }
+
+    /* Main Section Styling */
+    .main-section {
+      padding: 80px 0;
+      background-color: #000;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .main-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .main-section p {
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    /* Content Section Styling */
+    .content-section {
+      background-color: white;
+      color: #333;
+      padding: 60px 20px;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-section h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    .content-section p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .content-section ul {
+      padding-left: 20px;
+    }
+
+    .content-section ul li {
+      margin-bottom: 10px;
+    }
+
+    /* Features Section Styling */
+    .features-section {
+      background-color: #f8f9fa;
+      padding: 60px 20px;
+    }
+
+    .features-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+      text-align: center;
+    }
+
+    .feature-item {
+      text-align: left;
+      margin-bottom: 30px;
+    }
+
+    .feature-item img {
+      width: 100px;
+      height: 100px;
+      margin-bottom: 20px;
+    }
+
+    .feature-item h4 {
+      font-size: 1.6rem;
+      color: #333;
+    }
+
+    .feature-item p {
+      font-size: 1.1rem;
+      color: #666;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Animation Classes */
+    .fade-in-up {
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .fade-in-left {
+      animation: fadeInLeft 1s ease-out;
+    }
+
+    .fade-in-right {
+      animation: fadeInRight 1s ease-out;
+    }
+
+    /* Initially hide elements */
+    .animate-on-scroll {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Section -->
+  <div class="main-section">
+    <div class="container">
+      <h1 class="animate-on-scroll">Our Services</h1>
+      <p class="animate-on-scroll">Explore the services we offer to streamline your supply chain operations.</p>
+    </div>
+  </div>
+
+  <!-- Content Section -->
+  <div class="content-section">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Overview</h2>
+      <p class="animate-on-scroll">
+        Our Supply Chain Management System offers a comprehensive suite of services designed to optimize your supply chain operations. From order management to supplier communication, our platform provides the tools you need to enhance efficiency, reduce costs, and improve customer satisfaction.
+      </p>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="features-section">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Key Services</h2>
+      <div class="row justify-content-center">
+        <!-- Order Management -->
+        <div class="col-md-4 feature-item animate-on-scroll">
+          <img src="https://via.placeholder.com/100" alt="Order Management Icon">
+          <h4>Order Management</h4>
+          <p>
+            Simplify the process of placing, tracking, and fulfilling orders. Our system ensures seamless order processing from start to finish.
+          </p>
+          <ul>
+            <li>Centralized order tracking.</li>
+            <li>Automated order status updates.</li>
+            <li>Integration with suppliers and distributors.</li>
+          </ul>
+        </div>
+
+        <!-- Inventory Management -->
+        <div class="col-md-4 feature-item animate-on-scroll">
+          <img src="https://via.placeholder.com/100" alt="Inventory Management Icon">
+          <h4>Inventory Management</h4>
+          <p>
+            Keep track of your inventory in real-time. Our system helps you manage stock levels, reduce waste, and optimize storage.
+          </p>
+          <ul>
+            <li>Real-time inventory updates.</li>
+            <li>Low stock alerts.</li>
+            <li>Integration with order management.</li>
+          </ul>
+        </div>
+
+        <!-- Supplier Communication -->
+        <div class="col-md-4 feature-item animate-on-scroll">
+          <img src="https://via.placeholder.com/100" alt="Supplier Communication Icon">
+          <h4>Supplier Communication</h4>
+          <p>
+            Enhance collaboration with suppliers through our integrated communication tools. Share updates, resolve issues, and streamline workflows.
+          </p>
+          <ul>
+            <li>Real-time messaging.</li>
+            <li>Document sharing and collaboration.</li>
+            <li>Automated notifications.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits Section -->
+  <div class="content-section">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Benefits of Our Services</h2>
+      <p class="animate-on-scroll">
+        By using our services, you can achieve the following benefits:
+      </p>
+      <ul class="animate-on-scroll">
+        <li><strong>Improved Efficiency:</strong> Automate repetitive tasks and streamline workflows.</li>
+        <li><strong>Cost Savings:</strong> Reduce operational costs through optimized processes.</li>
+        <li><strong>Enhanced Visibility:</strong> Gain real-time insights into your supply chain.</li>
+        <li><strong>Customer Satisfaction:</strong> Deliver products faster and more reliably.</li>
+        <li><strong>Scalability:</strong> Our platform grows with your business.</li>
+      </ul>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p5nn1m5gdd+ntQg8VvvMVE9zv5K5e5+kR42lI8qD3TAK9VZ" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const element = entry.target;
+            const animationType = element.dataset.animation || 'fade-in-up';
+            element.classList.add(animationType);
+            element.style.opacity = 1;
+          } else {
+            // Reset the animation when the element is out of view
+            const element = entry.target;
+            const animationType = element.dataset.animation || 'fade-in-up';
+            element.classList.remove(animationType);
+            element.style.opacity = 0;
+          }
+        });
+      }, {
+        threshold: 0.1
+      });
+
+      animateElements.forEach(element => {
+        observer.observe(element);
+      });
+    });
+  </script>
+</body>
+</html>

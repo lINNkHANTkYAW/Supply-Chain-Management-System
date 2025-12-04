@@ -1,0 +1,12 @@
+@charset "UTF-8";
+
+.backbtn{
+    text-decoration: none; border: 2px solid black; border-radius: 20px; padding: 10px 20px; color: black;
+    transition: 0.7s;
+}
+
+.backbtn:hover{
+    background-color: black;
+    color: white;
+    
+}

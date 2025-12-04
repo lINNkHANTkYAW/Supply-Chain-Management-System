@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+   <!--=============== REMIXICONS ===============-->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">  
+
+   <!--=============== CSS ===============-->
+   <link rel="stylesheet" th:href="@{/css/forall.css}">
+
+   <title>Supplier Inventory Management</title>
+</head>
+<body>
+   <!--=============== HEADER ===============-->
+   <header class="header" id="header">
+       <div class="header__container">
+           <div class="header__logo d-flex align-items-center">
+           
+               
+           </div>
+           <button class="header__toggle" id="header-toggle">
+               <i class="ri-menu-line"></i>
+           </button>
+       </div>
+   </header>
+
+   <nav class="sidebar" id="sidebar">
+       <div class="sidebar__container">
+           <div class="sidebar__user">
+               <div class="sidebar__img" style="display: flex; justify-content: center; align-items: center; border-radius: 50%; overflow: hidden; background-color: #e0e0e0; ">
+                   <img id="mainProfileImage" style="background-size:cover; width:50px; height:50px;" th:src="${user?.profileImg != null} ? @{/img/{img}(img=${user.profileImg})} : @{/img/default-profile.jpg}" alt="Profile Image">
+               </div>
+               <div class="sidebar__info">
+                   <h3 th:text="${supplier.user.username != null ? supplier.user.username : 'Unknown User'}"></h3>
+                   <span th:text="${supplier.user.email != null ? supplier.user.email : 'Unknown Email'}"></span>
+               </div>
+           </div>
+           <div class="sidebar__content">
+               <div>
+                   <h3 class="sidebar__title">MANAGE</h3>
+                   <div class="sidebar__list">
+                       <a th:href="@{/supplier-dashboard}" class="sidebar__link ">
+                           <i class="ri-pie-chart-2-fill"></i> <span>Dashboard</span>
+                       </a>
+                       <a th:href="@{/supplier-raw-materials}" class="sidebar__link">
+                           <i class="bi bi-inboxes-fill"></i> <span>Manage Product</span>
+                       </a>
+                       <a th:href="@{/suppliermanageinventory}" class="sidebar__link active-link">
+                           <i class="bi bi-boxes"></i> <span>Manage Inventory</span>
+                       </a>
+                       
+                       <a th:href="@{/supplierordernoti}" class="sidebar__link">
+                           <i class="bi bi-journal-check"></i> <span>Order History</span>
+                       </a>
+                       <!-- <a th:href="@{/supplieranalytics}" class="sidebar__link">
+                           <i class="bi bi-bar-chart-line"></i> <span>Analytics</span>
+                       </a> 
+                       <a th:href="@{/suppliertransactionhistory}" class="sidebar__link">
+                           <i class="bi bi-wallet"></i> <span>Transaction History</span>
+                       </a> -->
+                   </div>
+               </div>
+               <div>
+                   <h3 class="sidebar__title">SETTINGS</h3>
+                   <div class="sidebar__list">
+                       <a th:href="@{/supplierprofile}"  class="sidebar__link">
+                           <i class="ri-settings-3-fill"></i> <span>Profile Settings</span>
+                       </a>
+                       
+                      
+                   </div>
+               </div>
+           </div>
+           <div class="sidebar__actions">
+               <button>
+                   <i class="ri-moon-clear-fill sidebar__link sidebar__theme" id="theme-button">
+                       <span>Theme</span>
+                   </i>
+               </button>
+               <button class="sidebar__link" type="submit" id="logoutBtn">
+                   <i class="ri-logout-box-r-fill"></i> Log Out
+               </button>
+           </div>
+       </div>
+   </nav>
+
+   <!--=============== MAIN ===============-->
+   <main class="main container-fluid" id="main">
+	<div id="chat-placeholder"></div>
+	   		<div th:replace="~{supplierChat :: chatFragment}"></div>
+        <div class="container mt-5">
+        
+            <h2>Supplier Inventory</h2>
+            
+            
+
+            <!-- Form for Adding Inventory Items -->
+            <form id="inventoryForm" th:action="@{/suppliermanageinventory}" th:object="${inventoryItem}" method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Item Name</label>
+                    <input type="text" class="form-control" id="name" th:field="*{name}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="category" class="form-label">Category</label>
+                    <select class="form-control" id="category" th:field="*{category.categoryId}" required>
+                        <option value="">Select Category</option>
+                        <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="date" class="form-label">Date</label>
+                    <input type="date" class="form-control" id="date" th:field="*{date}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="quantity" class="form-label">Quantity</label>
+                    <input type="number" class="form-control" id="quantity" th:field="*{quantity}" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="itemType" class="form-label">Quantity Type</label>
+                    <select class="form-control" id="itemType" th:field="*{itemType.id}" required>
+                        <option value="">Select Type</option>
+                        <option th:each="type : ${itemTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="cost" class="form-label">Total Cost</label>
+                    <input type="number" class="form-control" id="cost" th:field="*{cost}" min="1" required>
+                </div>
+                <div class="mb-3">
+                    <label for="perUnitCost" class="form-label">Per Unit Cost</label>
+                    <input type="text" class="form-control" id="perUnitCost" th:field="*{perUnitCost}" readonly>
+                </div>
+                <button type="submit" class="btn btn-primary">Add Item</button>
+            </form>
+
+            <!-- Inventory Table -->
+            <table class="table mt-4">
+                <thead>
+                    <tr>
+                        <th>Item Name</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Quantity</th>
+                        <th>Type</th>
+                        <th>Cost</th>
+                        <th>Per Unit Cost</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="inventoryTableBody">
+                    <tr th:each="item : ${inventoryItems}">
+                        <td th:text="${item.name}"></td>
+                        <td th:text="${item.category != null ? item.category.categoryName : 'No Category'}"></td>
+                        <td th:text="${item.date}"></td>
+                        <td th:text="${item.quantity}"></td>
+                        <td th:text="${item.itemType != null ? item.itemType.name : 'No Type'}"></td>
+                        <td th:text="${item.cost}"></td>
+                        <td th:text="${item.perUnitCost}"></td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" th:onclick="'editItem(' + ${item.id} + ')'">Edit</button>
+                            <a th:href="@{/suppliermanageinventory/delete/{id}(id=${item.id})}" class="btn btn-sm btn-danger">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Edit Modal -->
+           <!-- Edit Modal in suppliermanageinventory.html -->
+<div id="editModal" class="modal fade" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Edit Inventory Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editForm" th:action="@{/manageinventory/update/{id}(id=${inventoryItem.id})}" th:object="${inventoryItem}" method="post">
+                    <input type="hidden" id="editItemId" th:field="*{id}">
+                    <div class="mb-3">
+                        <label for="editItemName" class="form-label">Item Name</label>
+                        <input type="text" id="editItemName" class="form-control" th:field="*{name}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editCategory" class="form-label">Category</label>
+                        <select id="editCategory" class="form-control" th:field="*{category.categoryId}">
+                            <option value="">Select Category</option>
+                            <option th:each="cat : ${categories}" th:value="${cat.categoryId}" th:text="${cat.categoryName}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editItemDate" class="form-label">Date</label>
+                        <input type="date" id="editItemDate" class="form-control" th:field="*{date}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editItemQuantity" class="form-label">Quantity</label>
+                        <input type="number" id="editItemQuantity" class="form-control" th:field="*{quantity}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editItemType" class="form-label">Item Type</label>
+                        <select id="editItemType" class="form-control" th:field="*{itemType.id}">
+                            <option value="">Select Type</option>
+                            <option th:each="type : ${itemTypes}" th:value="${type.id}" th:text="${type.name}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editItemCost" class="form-label">Total Cost</label>
+                        <input type="number" id="editItemCost" class="form-control" th:field="*{cost}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPerUnitCost" class="form-label">Per Unit Cost</label>
+                        <input type="text" id="editPerUnitCost" class="form-control" th:field="*{perUnitCost}" readonly>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+               <button type="button" class="btn btn-primary" onclick="updateItem()">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+        </div>
+    </main>
+
+    <script th:src="@{/js/forall.js}"></script>
+    <script th:src="@{/js/suppliermanageinventory.js}"></script>
+</body>
+</html>

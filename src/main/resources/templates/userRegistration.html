@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{css/style.css}">
+    <link rel="stylesheet" th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}">
+    <title>Modern Login Page</title>
+    <style>
+        .role-selection {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .role-selection label {
+            display: block;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            text-align: center;
+        }
+
+        .role-selection input[type="radio"] {
+            display: none;
+        }
+
+        .role-selection input[type="radio"]:checked + label {
+            background-color: #4CAF50;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .role-selection label:hover {
+            background-color: #f0f0f0;
+        }
+        
+        /* Focus effect for the label */
+        .role-selection input[type="radio"]:focus+label {
+            outline: 3px solid #4CAF50; /* Add a green outline when clicked */
+        }
+    </style>
+</head>
+
+<body>
+
+	<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="modalTitle" aria-hidden="true" style="margin-top: 8%;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">User Info</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="signupForm" th:action="@{/register}" method="post">
+                    <!-- <div class="mb-3">
+                        <label for="name" class="form-label">Full Name</label>
+                        <input type="text" class="form-control" id="name" placeholder="Enter your name">
+                        <div class="invalid-feedback">Please enter your name.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="Enter your email">
+                        <div class="invalid-feedback">Please enter a valid email.</div>
+                    </div>  -->
+                    <input type="hidden" id="selectedRoleSignup" name="role" required>
+                    <div class="mb-3" id="extraFields"></div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your email" oninput="validateEmail('email')" required>
+                        <span id="email-error" class="text-danger"></span>
+                        <div class="invalid-feedback">Please enter a valid email.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Enter your password" oninput="validatePassword('password')" required>
+                        <span id="password-error" class="text-danger"></span>
+                        <div class="invalid-feedback">Password must have at least 8 characters, one uppercase, one lowercase, one digit, and one special character.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact_info" class="form-label">Contact Information</label>
+                        <input type="text" class="form-control" id="contact_info" name="contact_info" placeholder="Enter your contact information" oninput="validateContactInfo('contact_info')" required>
+                        <span id="contact-error" class="text-danger"></span> 
+                        <div class="invalid-feedback">Contact must be in format +959*********.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Enter your address">
+                        <div class="invalid-feedback">Please enter a valid address.</div>
+                    </div>
+                    <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="submitBtn" value="signup">Submit</button>
+            </div>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+    <div class="container1" id="container">
+        
+        <!-- Signup Form -->
+        <div class="form-container sign-up">
+            
+
+            <form id="roleForm" th:action="@{/register}" method="post">
+            <h1>Create Account</h1>
+            <span class="mt-2">Choose Your Role</span>
+            <div class="role-selection">
+                <button type="button" id="supplierBtn" class="btn" style="border: 2px solid black;">Supplier</button>
+                <button type="button" id="manufacturerBtn" class="btn" style="border: 2px solid black;">Manufacturer</button>
+                <button type="button" id="distributorBtn" class="btn" style="border: 2px solid black;">Distributor</button>
+                <button type="button" id="customerBtn" class="btn" style="border: 2px solid black;">Customer</button>
+            </div>
+            <p th:if="${signupError}" style="color: red;" class="error" th:text="${signupError}"></p>
+                <input type="hidden" id="selectedRoleSignup" name="role" required>
+                
+                <!-- <div id="signupFields"></div> --> <!-- Role-specific fields will be inserted here -->
+
+                <!-- <button type="submit" class="btn btn-primary">Sign Up</button> -->
+            </form>
+        </div>
+
+        <!-- Login Form -->
+        <div class="form-container sign-in">
+
+            <form id="loginForm" th:action="@{/login}" method="post">
+            <h1>Sign In</h1>
+            <span>Choose Your Role</span>
+            <div class="role-selection">
+                <button type="button" class="role-btn supplier" data-role="Supplier">Supplier</button>
+                <button type="button" class="role-btn manufacturer" data-role="Manufacturer">Manufacturer</button>
+                <button type="button" class="role-btn distributor" data-role="Distributor">Distributor</button>
+                <button type="button" class="role-btn customer" data-role="Customer">Customer</button>
+            </div>
+                <input type="hidden" id="selectedRole" name="role" required>
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+                <button type="submit" class="button1" value="login">Sign In</button>
+                <p th:if="${param.loginError}" class="error" th:text="${param.loginError[0]}"></p>
+                <div class="error-message">
+    <p th:if="${loginError}" th:text="${loginError}" style="color: red;"></p>
+</div>
+                
+            </form>
+        </div>
+
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Welcome Back!</h1>
+                    <p>Enter your personal details to use all of the site's features</p>
+                    <button class="button1 hidden" id="login">Sign In</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Hello, Friend!</h1>
+                    <p>Register with your personal details to use all of the site's features</p>
+                    <button class="button1 hidden" id="register">Sign Up</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+	<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+    <script th:src="@{js/script.js}"></script>
+</body>
+
+</html>

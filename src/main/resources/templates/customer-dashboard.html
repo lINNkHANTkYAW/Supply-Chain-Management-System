@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shop Page</title>
+<link rel="stylesheet" type="text/css" th:href="@{/css/customer.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+.notification-icon {
+	position: relative;
+	cursor: pointer;
+}
+
+.notification-wrapper {
+	display: none;
+	position: absolute;
+	top: 30%;
+		width: 300px;
+	background: white;
+	border: 1px solid #ddd;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.rating-stars span {
+	cursor: pointer;
+	font-size: 24px;
+	color: #ccc;
+}
+
+.rating-stars span.active {
+	color: gold;
+}
+</style>
+
+</head>
+<body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark p-2">
+    <div class="container-fluid">
+        <img th:src="@{/img/logo.png}" alt="Logo" style="width:70px; height:70px;" class="img-fluid rounded shadow">
+        <form id="searchForm" class="d-flex" style="width: 40%;">
+            <input id="searchInput" class="form-control me-2" type="search"
+                   placeholder="Search..." aria-label="Search">
+            <button class="btn btn-outline-info" type="submit">Search</button>
+            
+        </form>
+        <!-- Search Results Modal -->
+        <div class="modal fade" id="searchItemsModal" tabindex="-1"
+             aria-labelledby="searchItemsModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="searchItemsModalLabel">Search Results</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" style="max-height: 600px; overflow-y: auto;">
+                        <div class="row" id="searchItemsContainer">
+                            <!-- Search results will appear here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+   
+    
+    <div id="user-section">
+				<div id="user-options" class="d-flex align-items-center gap-3">
+					<!-- Profile Dropdown -->
+					<div class="dropdown">
+						<a href="#"
+							class="d-flex align-items-center text-light text-decoration-none dropdown-toggle"
+							id="profileDropdown" data-bs-toggle="dropdown"
+							aria-expanded="false"> <img 
+							th:src="${user?.profileImg != null} ? @{/img/{img}(img=${user.profileImg})} : @{/img/default-profile.jpg}" alt="Profile Image" id="profileIcon" width="32" height="32"
+							class="rounded-circle">
+						</a>
+						<ul class="dropdown-menu dropdown-menu-end"
+							aria-labelledby="profileDropdown">
+							<li><a class="dropdown-item sidebar__link"
+								th:href="@{/customerprofile}">👤 Profile Settings</a></li>
+							<li><a class="dropdown-item sidebar__link"
+								th:href="@{/customerorderhistory}">📙 Order History</a></li>
+								
+							<li>
+								<div class="notification-icon dropdown-item sidebar__link" th:onclick="'toggleNotifications()'">
+								🔔 <span
+								th:if="${notifications != null and #lists.size(notifications) > 0}"
+								th:text="${#lists.size(notifications)}"
+								class="badge bg-danger rounded-pill position-absolute top-0 mt-2 start-100 translate-middle">
+								</span>
+								Notification
+								</div>
+							</li>
+							
+							<li><a class="dropdown-item text-danger" href="#"
+								id="logoutBtn">🚪 Logout</a></li>
+						</ul>
+					</div>
+
+					
+				</div>
+			</div>
+</nav>
+
+			
+
+<div style="margin-left:90%; margin-top:2%;">
+	
+            <div  id="chat-placeholder"></div>
+   		<div th:replace="~{cusChat :: chatFragment}"></div>
+   </div>
+
+	
+
+	
+	<div class="container mt-5">
+  <h3>Categories</h3><br><br>
+  <div class="row mt-2" id="categoryContainer">
+    <!-- Categories will be dynamically loaded here -->
+  </div>
+</div>
+
+
+	<div class="modal fade" id="itemsModal" tabindex="-1" aria-labelledby="itemsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="itemsModalLabel">Items</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row" id="itemsContainer">
+                        <!-- Items will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+	<!-- Product Details Modal -->
+  <div class="modal fade" id="productDetailsModal" tabindex="-1"
+    aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productDetailsModalLabel">Product
+            Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"
+            aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="productModalBody"
+          style="max-height: 100%; overflow-y: auto;">
+          <!-- Product details will be dynamically inserted here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+	<div class="modal" id="userProfileModal" tabindex="-1"
+		aria-labelledby="userProfileModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="userProfileModalLabel"></h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="userProfileModalBody"></div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary"
+						data-bs-dismiss="modal">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	
+
+	<div class="container" style="margin-top:5%;">
+    <h3>Newly Arrived Brands</h3>
+    <div id="brandCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <!-- Brands will be inserted here dynamically -->
+        </div>
+        <button style="margin-left:-12%;" class="carousel-control-prev" type="button" data-bs-target="#brandCarousel" data-bs-slide="prev">
+            <span style="background-color:black; font-size:40px;" aria-hidden="true"><</span>
+        </button>
+        <button style="margin-right:-12%;" class="carousel-control-next" type="button" data-bs-target="#brandCarousel" data-bs-slide="next">
+            <span style="background-color:black; font-size:40px;" aria-hidden="true">></span>
+        </button>
+    </div>
+</div>
+    
+    <div class="container" style="margin-top:100px;">
+        <h3>Trending Products</h3>
+        <div id="trendingProductsCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner" id="trendingProductsList">
+                <!-- Trending products should be dynamically fetched from the database and inserted here -->
+            </div>
+            <button style="margin-left:-12%;" class="carousel-control-prev" type="button" data-bs-target="#trendingProductsCarousel" data-bs-slide="prev">
+                <span style="background-color:black; font-size:40px;" aria-hidden="true"><</span>
+            </button>
+            <button style="margin-right:-12%;" class="carousel-control-next" type="button" data-bs-target="#trendingProductsCarousel" data-bs-slide="next">
+                <span style="background-color:black; font-size:40px;" aria-hidden="true">></span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- MODAL FOR PLACE ORDER MODAL -->
+
+    <div class="modal fade" id="placeOrderModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Place Order</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body" id="placeOrderModalBody">
+                    <!-- Order details will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+	<!-- Product Details Modal -->
+	<div class="modal fade" id="productDetailsModal" tabindex="-1"
+		aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="productDetailsModalLabel">Product
+						Details</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="productModalBody">
+					<!-- Product details will be dynamically inserted here -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Notification Wrapper -->
+		<div class="notification-wrapper" id="notificationWrapper">
+			<div class="list-group">
+				<!-- Dynamically populated notifications -->
+				<div th:each="notification : ${notifications}"
+					th:class="'list-group-item list-group-item-action' + (${notification.rated} ? '' : ' list-group-item-warning')"
+					th:attr="data-order-id=${notification.cusOrder.orderId}, onclick=|openRatingModal('${notification.cusOrder.orderId}', '${notification.orderTitle}')|">
+					<span th:text="${notification.orderTitle}">Order Title</span> <small
+						th:text="${notification.orderDate}" class="text-muted d-block">Order
+						Date</small> <span th:if="${notification.rated}" class="badge bg-success">Rated</span>
+					<span th:unless="${notification.rated}" class="badge bg-warning">Pending</span>
+				</div>
+				<div
+					th:if="${notifications == null or #lists.isEmpty(notifications)}"
+					class="list-group-item text-center">No notifications
+					available</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Rating Modal -->
+	<div class="modal fade" id="ratingModal" tabindex="-1"
+		th:fragment="ratingModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitle">Rate your order</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="ratingOrderId" name="orderId">
+					<div class="rating-stars">
+						<span th:onclick="'rate(1)'">★</span> <span th:onclick="'rate(2)'">★</span>
+						<span th:onclick="'rate(3)'">★</span> <span th:onclick="'rate(4)'">★</span>
+						<span th:onclick="'rate(5)'">★</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						th:onclick="'submitRating()'">Submit</button>
+					<button type="button" class="btn btn-secondary"
+						th:onclick="'ignoreRating()'">Ignore</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script th:src="@{/js/rating.js}"></script>
+	
+	<script th:inline="javascript">
+		
+	</script>
+	
+
+	<script th:src="@{/js/customer.js}"></script>
+
+		
+
+
+</body>
+</html>
+
+<!-- 
+body {
+	background-color: #f4f4f4; /* Light background for contrast */
+}
+
+.navbar {
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	/* Subtle shadow for navbar */
+}
+
+.category-card {
+	border: 1px solid #ddd; /* Border for category cards */
+	border-radius: 8px; /* Rounded corners */
+	transition: box-shadow 0.3s; /* Smooth shadow effect */
+}
+
+.category-card:hover {
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Shadow on hover */
+}
+
+.card {
+	border: none; /* Remove default card border */
+	border-radius: 8px; /* Rounded corners for product cards */
+	transition: transform 0.3s; /* Smooth scaling effect */
+}
+
+.card:hover {
+	transform: translateY(-5px); /* Lift effect on hover */
+}
+
+.card-img-top {
+	border-top-left-radius: 8px; /* Rounded corners for top of card */
+	border-top-right-radius: 8px; /* Rounded corners for top of card */
+}
+
+.btn-primary {
+	background-color: #007bff; /* Bootstrap primary color */
+	border-color: #007bff; /* Match border color */
+}
+
+.btn-primary:hover {
+	background-color: #0056b3; /* Darker shade on hover */
+	border-color: #0056b3; /* Match border color */
+}
+
+h3 {
+	margin-bottom: 20px; /* Space below section headings */
+	font-weight: bold; /* Bold headings */
+}
+
+.container {
+	margin-top: 20px; /* Space above containers */
+} 
+ -->

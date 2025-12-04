@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rating Notifications</title>
+<!-- Bootstrap CSS -->
+<link rel="stylesheet"
+	th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}">
+<style>
+.notification-icon {
+	position: relative;
+	cursor: pointer;
+}
+
+.notification-wrapper {
+	display: none;
+	position: absolute;
+	top: 30%;
+		width: 300px;
+	background: white;
+	border: 1px solid #ddd;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.rating-stars span {
+	cursor: pointer;
+	font-size: 24px;
+	color: #ccc;
+}
+
+.rating-stars span.active {
+	color: gold;
+}
+</style>
+</head>
+<body>
+	<div class="container mt-5">
+		<!-- Notification Icon -->
+		<div class="notification-icon" th:onclick="'toggleNotifications()'">
+			🔔 <span
+				th:if="${notifications != null and #lists.size(notifications) > 0}"
+				th:text="${#lists.size(notifications)}"
+				class="badge bg-danger rounded-pill position-absolute top-0 mt-2 start-100 translate-middle">
+			</span>
+		</div>
+
+		<!-- Notification Wrapper -->
+		<div class="notification-wrapper" id="notificationWrapper">
+			<div class="list-group">
+				<!-- Dynamically populated notifications -->
+				<div th:each="notification : ${notifications}"
+					th:class="'list-group-item list-group-item-action' + (${notification.rated} ? '' : ' list-group-item-warning')"
+					th:attr="data-order-id=${notification.cusOrder.orderId}, onclick=|openRatingModal('${notification.cusOrder.orderId}', '${notification.orderTitle}')|">
+					<span th:text="${notification.orderTitle}">Order Title</span> <small
+						th:text="${notification.orderDate}" class="text-muted d-block">Order
+						Date</small> <span th:if="${notification.rated}" class="badge bg-success">Rated</span>
+					<span th:unless="${notification.rated}" class="badge bg-warning">Pending</span>
+				</div>
+				<div
+					th:if="${notifications == null or #lists.isEmpty(notifications)}"
+					class="list-group-item text-center">No notifications
+					available</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Rating Modal -->
+	<div class="modal fade" id="ratingModal" tabindex="-1"
+		th:fragment="ratingModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modalTitle">Rate your order</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<input type="hidden" id="ratingOrderId" name="orderId">
+					<div class="rating-stars">
+						<span th:onclick="'rate(1)'">★</span> <span th:onclick="'rate(2)'">★</span>
+						<span th:onclick="'rate(3)'">★</span> <span th:onclick="'rate(4)'">★</span>
+						<span th:onclick="'rate(5)'">★</span>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-primary"
+						th:onclick="'submitRating()'">Submit</button>
+					<button type="button" class="btn btn-secondary"
+						th:onclick="'ignoreRating()'">Ignore</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS and dependencies -->
+	<script th:src="@{/js/rating.js}"></script>
+	<script
+		th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+	<script th:inline="javascript">
+		
+	</script>
+</body>
+</html>

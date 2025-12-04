@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/supplierdashboard.css}">
+    <link rel="stylesheet" th:href="@{/css/forall.css}">
+    <title>Supplier Dashboard</title>
+</head>
+<body>
+    <header class="header" id="header">
+        <div class="header__container">
+            <div class="header__logo d-flex align-items-center">
+            
+                
+                
+            </div>
+            <button class="header__toggle" id="header-toggle">
+                <i class="ri-menu-line"></i>
+            </button>
+        </div>
+    </header>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar__container">
+            <div class="sidebar__user">
+                <div class="sidebar__img" style="display: flex; justify-content: center; align-items: center; border-radius: 50%; overflow: hidden; background-color: #e0e0e0; ">
+                    <img id="mainProfileImage" style="background-size:cover; width:50px; height:50px;" th:src="${user?.profileImg != null} ? @{/img/{img}(img=${user.profileImg})} : @{/img/default-profile.jpg}" alt="Profile Image">
+                </div>
+                <div class="sidebar__info">
+                    <h3 th:text="${supplier.user.username != null ? supplier.user.username : 'Unknown User'}"></h3>
+                    <span th:text="${supplier.user.email != null ? supplier.user.email : 'Unknown Email'}"></span>
+                </div>
+            </div>
+            <div class="sidebar__content">
+                <div>
+                    <h3 class="sidebar__title">MANAGE</h3>
+                    <div class="sidebar__list">
+                        <a th:href="@{/supplier-dashboard}" class="sidebar__link active-link">
+                            <i class="ri-pie-chart-2-fill"></i> <span>Dashboard</span>
+                        </a>
+                        <a th:href="@{/supplier-raw-materials}" class="sidebar__link">
+                            <i class="bi bi-inboxes-fill"></i> <span>Manage Product</span>
+                        </a>
+                        <a th:href="@{/suppliermanageinventory}" class="sidebar__link">
+                            <i class="bi bi-boxes"></i> <span>Manage Inventory</span>
+                        </a>
+                        
+                        <a th:href="@{/supplierordernoti}" class="sidebar__link">
+                            <i class="bi bi-journal-check"></i> <span>Order History</span>
+                        </a>
+                        <!-- <a th:href="@{/supplieranalytics}" class="sidebar__link">
+                            <i class="bi bi-bar-chart-line"></i> <span>Analytics</span>
+                        </a> 
+                        <a th:href="@{/suppliertransactionhistory}" class="sidebar__link">
+                            <i class="bi bi-wallet"></i> <span>Transaction History</span>
+                        </a> -->
+                    </div>
+                </div>
+                <div>
+                    <h3 class="sidebar__title">SETTINGS</h3>
+                    <div class="sidebar__list">
+                        <a th:href="@{/supplierprofile}"  class="sidebar__link">
+                            <i class="ri-settings-3-fill"></i> <span>Profile Settings</span>
+                        </a>
+                        
+                       
+                    </div>
+                </div>
+            </div>
+            <div class="sidebar__actions">
+                <button>
+                    <i class="ri-moon-clear-fill sidebar__link sidebar__theme" id="theme-button">
+                        <span>Theme</span>
+                    </i>
+                </button>
+                <button class="sidebar__link" type="submit" id="logoutBtn">
+                    <i class="ri-logout-box-r-fill"></i> Log Out
+                </button>
+            </div>
+        </div>
+    </nav>
+    
+        	            	    
+
+
+    <main class="main container-fluid" id="main">
+        <input type="hidden" id="supplierId" th:value="${supplier?.supplierId}">
+        <div id="chat-placeholder"></div>
+   		<div th:replace="~{supplierChat :: chatFragment}"></div>
+        
+		        <div class="row">
+        
+            <div class="col-md-4 mt-2">
+                <div class="flex-box" style="background-image: linear-gradient(230deg, #759bff, #843cf6); color: white;">
+                    <h3>Products Sold</h3>
+                    <p id="productsSold" th:text="${stats?.productsSold ?: 'Loading...'}"></p>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2">
+                <div class="flex-box" style="background-image: linear-gradient(230deg, #fc5286, #fbaaa2); color: white;">
+                    <h3>Net Profit</h3>
+                    <p id="netProfit" th:text="${stats?.netProfit != null ? '$' + stats.netProfit : 'Loading...'}"></p>
+                </div>
+            </div>
+            <div class="col-md-4 mt-2">
+                <div class="flex-box" style="background-image: linear-gradient(230deg, #ffc480, #ff763b); color: white;">
+                    <h3>Pending Orders</h3>
+                    <p id="pendingOrders" th:text="${stats?.pendingOrders ?: 'Loading...'}"></p>
+                </div>
+            </div>
+        </div>
+
+		<div class="container mt-4">
+		    <div class="col-11 mb-4">
+		        <h2>Product Sales per Month</h2>
+		        <canvas id="productSalesChart"></canvas>
+		    </div>
+			<div class="row">
+		    <div class="col-5">
+		        <h2>Order Completion Rate</h2>
+		        <canvas id="orderCompletionChart"></canvas>
+		    </div>
+			<div class="col-4">
+				
+			</div>
+		</div>
+		</div>    </main>
+
+    <script th:src="@{/js/forall.js}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <!--  <script th:inline="javascript">
+    /*<![CDATA[*/
+    document.addEventListener("DOMContentLoaded", function () {
+        let supplierId = document.getElementById("supplierId").value;
+
+        // Debugging: Print the data to the console
+        console.log("Product Sales Data (Thymeleaf):", /*[[${productSalesData}]]*/ []);
+        console.log("Product Sales Labels (Thymeleaf):", /*[[${productSalesLabels}]]*/ []);
+        console.log("Order Completion Rate (Thymeleaf):", /*[[${orderCompletionRate}]]*/ {});
+
+        // Product Sales Chart
+        let productSalesData = /*[[${productSalesData}]]*/ [];
+        let productSalesLabels = /*[[${productSalesLabels}]]*/ [];
+        
+        if (!productSalesData.length || !productSalesLabels.length) {
+            productSalesData = [0];
+            productSalesLabels = ["No Data"];
+        }
+
+        let salesCtx = document.getElementById("productSalesChart").getContext("2d");
+        new Chart(salesCtx, {
+            type: "bar",
+            data: {
+                labels: productSalesLabels,
+                datasets: [{
+                    label: "Product Sales",
+                    data: productSalesData,
+                    backgroundColor: "rgba(54, 162, 235, 0.5)",
+                    borderColor: "rgba(54, 162, 235, 1)",
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Order Completion Chart
+        let completionRate = /*[[${orderCompletionRate}]]*/ {};
+        let completedOrders = completionRate['COMPLETED'] || 0;
+        let pendingOrders = completionRate['PENDING'] || 0;
+        let completionData = [completedOrders, pendingOrders];
+        
+        if (completedOrders === 0 && pendingOrders === 0) {
+            completionData = [1, 0]; // Show a default pie to avoid empty chart
+        }
+
+        let completionCtx = document.getElementById("orderCompletionChart").getContext("2d");
+        new Chart(completionCtx, {
+            type: "pie",
+            data: {
+                labels: ["Completed Orders", "Pending Orders"],
+                datasets: [{
+                    label: "Order Completion Rate",
+                    data: completionData,
+                    backgroundColor: ["#36A2EB", "#FF6384"],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "top"
+                    }
+                }
+            }
+        });
+    });
+    /*]]>*/
+</script> -->
+
+	<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	    const supplierId = document.getElementById("supplierId").value;
+	    
+	 // Fetch supplier stats
+	    fetch(`/supplierdashboard/stats/${supplierId}`)
+	        .then(response => response.json())
+	        .then(data => {
+	            document.getElementById("productsSold").innerText = data.productsSold || 0;
+	            document.getElementById("netProfit").innerText = `$${data.netProfit?.toFixed(2) || 0}`;
+	            document.getElementById("pendingOrders").innerText = data.pendingOrders || 0;
+	        })
+	        .catch(error => console.error("Error fetching supplier stats:", error));
+
+	    
+
+	    // Fetch order completion rate
+	    fetch(`/supplierdashboard/completion-rate/${supplierId}`)
+	        .then(response => response.json())
+	        .then(data => {
+	            const completionCtx = document.getElementById("orderCompletionChart").getContext("2d");
+	            new Chart(completionCtx, {
+	                type: "pie",
+	                data: {
+	                    labels: ["Completed", "Pending"],
+	                    datasets: [{
+	                        label: "Order Completion Rate",
+	                        data: [data.Completed || 0, data.Pending || 0], // Ensure default values
+	                        backgroundColor: ["#36A2EB", "#FF6384"], // Blue for Completed, Red for Pending
+	                        borderWidth: 1
+	                    }]
+	                },
+	                options: {
+	                    responsive: true,
+	                    plugins: {
+	                        legend: {
+	                            position: "top"
+	                        }
+	                    }
+	                }
+	            });
+	        })
+	        .catch(error => console.error("Error fetching order completion rate:", error));
+	    
+	 // Fetch monthly sales data
+	    fetch(`/supplierdashboard/monthly-sales/${supplierId}`)
+	        .then(response => response.json())
+	        .then(data => {
+	            const salesCtx = document.getElementById("productSalesChart").getContext("2d");
+	            new Chart(salesCtx, {
+	                type: "bar",
+	                data: {
+	                    labels: data.labels || ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+	                    datasets: [{
+	                        label: "Product Sales",
+	                        data: data.values || [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], // Default to 0 if no data
+	                        backgroundColor: "rgba(54, 162, 235, 0.5)",
+	                        borderColor: "rgba(54, 162, 235, 1)",
+	                        borderWidth: 1
+	                    }]
+	                },
+	                options: {
+	                    responsive: true,
+	                    scales: {
+	                        y: {
+	                            beginAtZero: true
+	                        }
+	                    }
+	                }
+	            });
+	        })
+	        .catch(error => console.error("Error fetching product sales data:", error));
+	});
+	</script>
+  
+</body>
+</html>

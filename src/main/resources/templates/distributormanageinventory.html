@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributor Marketplace Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"> 
+      <link rel="stylesheet" href="css/forall.css">
+   
+    <style>
+        .image-box { width: 150px; height: 150px; border: 2px dashed #ccc; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-bottom: 20px; }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+        .remove-image { position: absolute; top: 0; right: 0; background: red; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .card { height: 100%; display: flex; flex-direction: column; }
+        .card-body { flex: 1; display: flex; flex-direction: column; }
+        .btn-group { margin-top: auto; }
+        .modal-dialog { max-width: 500px; }
+    </style>
+</head>
+<body>
+<!--=============== HEADER ===============-->
+   <header class="header" id="header">
+      <div class="header__container">
+         <div class="header__logo d-flex align-items-center">
+            
+   
+         
+         </div>
+         <button class="header__toggle" id="header-toggle">
+            <i class="ri-menu-line"></i>
+         </button>
+      </div>
+   </header>
+
+   <!--=============== SIDEBAR ===============-->
+   <nav class="sidebar" id="sidebar">
+      <div class="sidebar__container">
+         <div class="sidebar__user">
+            <div class="sidebar__img" 			style="display: flex; justify-content: center; align-items: center; border-radius: 50%; overflow: hidden; background-color: #e0e0e0; ">
+				<img id="mainProfileImage" style="background-size:cover; width:50px; height:50px;" th:src="${user?.profileImg != null} ? @{/img/{img}(img=${user.profileImg})} : @{/img/default-profile.jpg}" alt="Profile Image">
+            </div>
+            <div class="sidebar__info">
+               <h3 th:text="${user.username}">Rix Methil</h3>
+               <span th:text="${user.email}">rix123@email.com</span>
+            </div>
+         </div>
+
+         <div class="sidebar__content">
+            <div>
+               <h3 class="sidebar__title">MANAGE</h3>
+               <div class="sidebar__list">
+                  <a th:href="@{/distributor-dashboard}" class="sidebar__link ">
+                     <i class="ri-pie-chart-2-fill"></i>
+                     <span>Dashboard</span>
+                  </a>
+                  <a th:href="@{/distributor-inventory}" class="sidebar__link active-link">
+                     <i class="bi bi-inboxes-fill"></i>
+                     <span>Manage Product</span>
+                  </a>
+                  <a th:href="@{/distributorinventory}" class="sidebar__link">
+                     <i class="bi bi-boxes"></i>
+                     <span>Manage Inventory</span>
+                  </a>
+                  <a th:href="@{/manufacturermarketplace}" class="sidebar__link">
+                    <i class="bi bi-shop"></i>
+                     <span>Manufactuerer MarketPlace</span>
+                  </a>
+                  <a th:href="@{/distributororderhistory}" class="sidebar__link">
+                     <i class="ri-arrow-up-down-line"></i>
+                     <span>Orders History with Manufactuerer</span>
+                  </a>
+                  <a th:href="@{/notifications}" class="sidebar__link">
+                     <i class="ri-notification-2-fill"></i>
+                     <span>Notifications</span>
+                  </a>
+                  <a th:href="@{/distributororderfromcustomer}" class="sidebar__link">
+                     <i class="bi bi-journal-check"></i>
+                     <span>Order from Customer</span>
+                  </a>
+                  
+                  	
+               </div>
+            </div>
+            <div>
+               <h3 class="sidebar__title">SETTINGS</h3>
+               <div class="sidebar__list">
+                  <a th:href="@{/distriprofile}" class="sidebar__link">
+                     <i class="ri-settings-3-fill"></i>
+                     <span>Profile Settings</span>
+                  </a>
+                 
+                  
+               </div>
+            </div>
+         </div>
+         <div class="sidebar__actions">
+            <button>
+               <i class="ri-moon-clear-fill sidebar__link sidebar__theme" id="theme-button">
+                  <span>Theme</span>
+               </i>
+            </button>
+            <button class="sidebar__link" id="logoutBtn">
+               <i class="ri-logout-box-r-fill"></i>
+               <span>Log Out</span>
+            </button>
+         </div>
+      </div>
+   </nav>
+   <main class="main container-fluid" id="main">
+    <div id="chat-placeholder"></div>
+   		<div th:replace="~{distriChat :: chatFragment}"></div>
+        <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="searchInput" class="form-control" placeholder="Search by name">
+            </div>
+            <div class="col-md-6">
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addInventoryModal" th:if="${loggedInDistributor != null}">Add Marketplace Item</button>
+            </div>
+        </div>
+
+        <h3 class="mt-4">Marketplace Items</h3>
+        <div id="inventoryItemsList" class="row mt-4">
+            <div th:each="item : ${marketplaceItems}" class="col-md-4 mb-4">
+                <div class="card">
+                   <img th:src="@{/uploads/{filename}(filename=${item.image})}" class="card-img-top" alt="Product Image" th:if="${item.image}">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${item.name}">Item Name</h5>
+                        <p class="card-text">Category: <span th:text="${item.category.categoryName}">N/A</span></p>
+                        <p class="card-text">Cost: <span th:text="${item.price}">0</span></p>
+                        <p class="card-text">Description: <span th:text="${item.description}">N/A</span></p>
+                        <div class="btn-group">
+                            <button class="btn btn-warning btn-sm" th:onclick="'editItem(' + ${item.productId} + ')'">Edit</button>
+                            <a th:href="@{/distributor-inventory/delete-marketplace/{id}(id=${item.productId})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Marketplace Item Modal -->
+        <div class="modal fade" id="addInventoryModal" tabindex="-1" aria-labelledby="addInventoryModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addInventoryModalLabel">Add Marketplace Item</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="marketplaceForm" th:action="@{/distributor-inventory/save-marketplace}" method="post" enctype="multipart/form-data">
+                            <input type="hidden" id="formMode" name="formMode" value="add" />
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Item Name</label>
+                                <select class="form-control name-field" id="name" name="name" required>
+                                    <option value="">Select Item</option>
+                                    <option th:each="item : ${allInventoryItems}" th:value="${item.name}" th:text="${item.name}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="category" class="form-label">Category</label>
+                                <select id="category" name="category" class="form-control" required>
+                                    <option th:each="category : ${categories}" th:value="${category.categoryId}" th:text="${category.categoryName}"></option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="price" class="form-label">Cost</label>
+                                <input type="number" class="form-control" id="price" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <textarea class="form-control" id="description" name="description" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Upload Image</label>
+                                <input type="file" class="form-control" id="image" name="image" accept="image/*">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Save</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+</main>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script th:src="@{/js/distriinven.js}"></script>
+       <script th:src="@{/js/forall.js}"></script>
+    
+</body>
+</html>

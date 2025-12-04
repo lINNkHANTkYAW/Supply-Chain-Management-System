@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!--=============== REMIXICONS ===============-->
+<link rel="stylesheet"
+	th:href="@{https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.2.0/remixicon.css}">
+<link
+	th:href="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css}"
+	rel="stylesheet">
+<!-- Add these Bootstrap Icons to your project -->
+<link
+	th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css}"
+	rel="stylesheet">
+<link
+	th:href="@{https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css}"
+	rel="stylesheet">
+
+<!--=============== CSS ===============-->
+<link rel="stylesheet" th:href="@{css/distributormanageproduct.css}">
+<link rel="stylesheet" th:href="@{css/forall.css}">
+
+<title>Responsive sidebar Menu | Dark/Light Mode - Bedimcode</title>
+</head>
+<body>
+	<!--=============== HEADER ===============-->
+	<header class="header" id="header">
+		<div class="header__container">
+			<div class="header__logo d-flex align-items-center">
+				<!-- Message Box Dropdown -->
+				<div class="dropdown mx-3">
+					<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+						aria-expanded="false"> <i class="bi bi-envelope"></i> <!-- Message icon -->
+					</a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">Message 1</a></li>
+						<li><a class="dropdown-item" href="#">Message 2</a></li>
+						<li><a class="dropdown-item" href="#">Message 3</a></li>
+					</ul>
+				</div>
+
+				<!-- Notification Bell Dropdown -->
+				<div class="dropdown mx-2">
+					<a href="#" class="dropdown-toggle" data-bs-toggle="dropdown"
+						aria-expanded="false"> <i class="bi bi-bell"></i> <!-- Bell icon -->
+					</a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" href="#">Notification 1</a></li>
+						<li><a class="dropdown-item" href="#">Notification 2</a></li>
+						<li><a class="dropdown-item" href="#">Notification 3</a></li>
+					</ul>
+				</div>
+
+			
+			</div>
+			<button class="header__toggle" id="header-toggle">
+				<i class="ri-menu-line"></i>
+			</button>
+		</div>
+	</header>
+
+	<!--=============== SIDEBAR ===============-->
+	<nav class="sidebar" id="sidebar">
+		<div class="sidebar__container">
+			<div class="sidebar__user">
+				<div class="sidebar__img">
+					<img th:src="@{/img/perfil.png}" alt="image">
+				</div>
+				<div class="sidebar__info">
+					<h3>Rix Methil</h3>
+					<span>rix123@email.com</span>
+				</div>
+			</div>
+
+			<div class="sidebar__content">
+				<div>
+					<h3 class="sidebar__title">MANAGE</h3>
+					<div class="sidebar__list">
+						<a th:href="@{/distributor-dashboard}"
+							class="sidebar__link active-link"> <i
+							class="ri-pie-chart-2-fill"></i> <span>Dashboard</span>
+						</a> <a th:href="@{/distributormanageproduct}" class="sidebar__link">
+							<i class="bi bi-inboxes-fill"></i> <span>Manage Product</span>
+						</a> <a th:href="@{/distributormanageinventory}" class="sidebar__link">
+							<i class="bi bi-boxes"></i> <span>Manage Inventory</span>
+						</a> <a th:href="@{/distribut ormanufacturermarketplace}"
+							class="sidebar__link"> <i class="bi bi-shop"></i> <span>Manufactuerer
+								MarketPlace</span>
+						</a> <a th:href="@{/distributororderfrommanufacturer}"
+							class="sidebar__link"> <i class="ri-arrow-up-down-line"></i>
+							<span>Orders History with Manufactuerer</span>
+						</a> <a th:href="@{/distributororderfromcustomer}"
+							class="sidebar__link"> <i class="bi bi-journal-check"></i> <span>Orders
+								from Customer</span>
+						</a> <a th:href="@{/distributoranalytics}" class="sidebar__link">
+							<i class="bi bi-bar-chart-line"></i> <span>Analytics</span>
+						</a> <a th:href="@{/distributortransaction}" class="sidebar__link">
+							<i class="bi bi-wallet"></i> <span>Transaction History</span>
+						</a>
+					</div>
+				</div>
+				<div>
+					<h3 class="sidebar__title">SETTINGS</h3>
+					<div class="sidebar__list">
+						<a href="#" class="sidebar__link"> <i
+							class="ri-settings-3-fill"></i> <span>Settings</span>
+						</a> <a href="#" class="sidebar__link"> <i
+							class="ri-mail-unread-fill"></i> <span>My Messages</span>
+						</a> <a href="#" class="sidebar__link"> <i
+							class="ri-notification-2-fill"></i> <span>Notifications</span>
+						</a>
+					</div>
+				</div>
+			</div>
+			<div class="sidebar__actions">
+				<button>
+					<i class="ri-moon-clear-fill sidebar__link sidebar__theme"
+						id="theme-button"> <span>Theme</span>
+					</i>
+				</button>
+				<button class="sidebar__link">
+					<i class="ri-logout-box-r-fill"></i> <span>Log Out</span>
+				</button>
+			</div>
+		</div>
+	</nav>
+
+	<!--=============== MAIN ===============-->
+	<main class="main container-fluid" id="main">
+		<section id="products" class="card-data">
+			<div style="display: flex; gap: 55%;">
+
+				<div class="marketplace" id="marketplace">
+					<h2>Your Marketplace</h2>
+					<button id="add-item-btn">Register New Product</button>
+
+					<!-- <div class="product-list">
+        <div th:each="product : ${products}" class="product-card">
+            <img th:src="@{${product.image}}" alt="Product Image">
+            <h4 th:text="${product.name}"></h4>
+            <p th:text="${product.description}"></p>
+            <p>Price: $<span th:text="${product.price}"></span></p>
+            <p>Stock: <span th:text="${product.stockQuantity}"></span></p>
+            <form th:action="@{/distributor/delete-product/{id}(id=${product.productId})}" method="post">
+                <button type="submit">Delete</button>
+            </form>
+        </div> -->
+					<div class="product-list" id="product-list">
+						<!-- Products will be dynamically added here -->
+					</div>
+				</div>
+			</div>
+
+			</div>
+			<div>New Items Added This Week</div>
+			<div class="marketplace flex-box" id="marketplace">
+				<!-- Products will be dynamically added here -->
+			</div>
+			<div>Old Items Added Last Week</div>
+			<div class="old-items flex-box mt-4" id="old-items"></div>
+		</section>
+
+
+		<div class="modal" id="add-item-modal">
+			<div class="modal-content">
+				<h3>New Product</h3>
+				<form id="add-item-form">
+					<input type="text" id="product-name" placeholder="Product Name"
+						required>
+					<textarea id="product-description" placeholder="Description"
+						required></textarea>
+					<input type="number" id="product-price" placeholder="Price"
+						required> <input type="number" id="product-quantity"
+						placeholder="Quantity" required> <select
+						id="product-category">
+						<option value="">Select Category</option>
+						<option value="Household Items">Household Items</option>
+						<option value="Fashion and Apparel">Fashion and Apparel</option>
+						<option value="Food and Beverages">Food and Beverages</option>
+					</select>
+					<div class="image-upload" id="image-upload">
+						<div class="image-box" id="add-image-box">+</div>
+					</div>
+					<button type="submit">Save</button>
+				</form>
+			</div>
+		</div>
+	</main>
+
+	<!--=============== MAIN JS ===============-->
+	<script th:src="@{js/forall.js}"></script>
+	<script th:src="@{js/manufacturermanageproduct.js}"></script>
+	<script th:src="@{https://code.jquery.com/jquery-3.5.1.slim.min.js}"></script>
+	<script
+		th:src="@{https://cdn.jsdelivr.net/npm/@popperjs/core@2.0.7/dist/umd/popper.min.js}"></script>
+	<script
+		th:src="@{https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+	<script
+		th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+	<script th:src="@{https://cdn.jsdelivr.net/npm/chart.js}"></script>
+
+	<!--  <script>
+      // Fetch products and display them
+      async function fetchProducts() {
+         try {
+            const response = await fetch('/api/products');
+            if (!response.ok) {
+               throw new Error('Network response was not ok');
+            }
+            const products = await response.json();
+            displayProducts(products);
+         } catch (error) {
+            console.error('There has been a problem with your fetch operation:', error);
+         }
+      }
+
+      function displayProducts(products) {
+         const productList = document.getElementById('product-list');
+         productList.innerHTML = ''; // Clear existing products
+
+         products.forEach(product => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+
+            const img = document.createElement('img');
+            img.src = product.image; // Assuming product.image is a URL
+            img.alt = 'Product Image';
+
+            const name = document.createElement('h4');
+            name.textContent = product.name;
+
+            const description = document.createElement('p');
+            description.textContent = product.description;
+
+            const price = document.createElement('p');
+            price.textContent = `Price: $${product.price}`;
+
+            const stock = document.createElement('p');
+            stock.textContent = `Stock: ${product.stockQuantity}`;
+
+            const deleteForm = document.createElement('form');
+            deleteForm.action = `/distributor/delete-product/${product.productId}`;
+            deleteForm.method = 'post';
+
+            const deleteButton = document.createElement('button');
+            deleteButton.type = 'submit';
+            deleteButton.textContent = 'Delete';
+
+            deleteForm.appendChild(deleteButton);
+            productCard.appendChild(img);
+            productCard.appendChild(name);
+            productCard.appendChild(description);
+            productCard.appendChild(price);
+            productCard.appendChild(stock);
+            productCard.appendChild(deleteForm);
+
+            productList.appendChild(productCard);
+         });
+      }
+
+      // Call fetchProducts when the page loads
+      document.addEventListener('DOMContentLoaded', fetchProducts);
+   </script> -->
+</body>
+</html>

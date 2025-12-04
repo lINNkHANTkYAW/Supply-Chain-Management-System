@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chat Notification Box</title>
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+	rel="stylesheet">
+
+
+</head>
+<body>
+	<div th:fragment="chatFragment">
+	<style>
+	body {
+		font-family: Arial, sans-serif;
+	}
+
+	.chat-icon {
+		cursor: pointer;
+		font-size: 1.5rem;
+		box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+		z-index:100000;
+	}
+
+	.chat-box {
+		width: 300px;
+		height: 400px;
+		border-radius: 10px;
+		z-index:100000px;
+		margin-left:-20%;
+	}
+
+	.chat-list .chat-item {
+		cursor: pointer;
+		transition: background 0.3s;
+	}
+
+	.chat-list .chat-item:hover {
+		background: #f8f9fa;
+	}
+
+	.chat-messages {
+		display: flex;
+		flex-direction: column; /* Align messages in a vertical column */
+		align-items: flex-start; /* Align messages to the left */
+		gap: 10px; /* Space between messages */
+		max-height: 400px;
+		overflow-y: auto;
+		padding: 10px;
+	}
+
+	.message {
+		background: #f1f1f1;
+		padding: 8px 12px;
+		border-radius: 10px;
+		max-width: 75%;
+		word-wrap: break-word;
+	}
+
+	.message.sent {
+	    margin-left: auto; /* Right side */
+	    background-color: #007bff; /* Blue */
+	    color: white;
+	    text-align: right;
+	}
+
+	.message.received {
+	    margin-right: auto; /* Left side */
+	    background-color: white;
+	    color: black;
+	    text-align: left;
+	}
+
+	.message img {
+		max-width: 150px;
+		border-radius: 5px;
+		margin-top: 5px;
+	}
+
+	.context-menu {
+		position: absolute;
+		z-index: 9999 !important; /* Ensures it stays on top */
+		background: white;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+		padding: 5px 0;
+		min-width: 160px;
+		max-width: 200px;
+		white-space: nowrap;
+	}
+
+	.context-menu .dropdown-item {
+		padding: 8px 12px;
+		cursor: pointer;
+		font-size: 14px;
+		display: block;
+	}
+
+	.context-menu .dropdown-item:hover {
+		background: #f8f9fa;
+	}
+	</style>
+
+	<!-- Chat Notification Icon -->
+	<div id="chat-icon"
+		class="chat-icon position-fixed bottom-3 end-3 p-3 bg-primary text-white rounded-circle">
+		💬</div>
+
+	<!-- Chat Box -->
+	<div id="chat-box" style="z-index:1000000;"
+		class="chat-box position-fixed bottom-3 end-3 bg-white shadow rounded p-3 d-none">
+		<div class="d-flex justify-content-between align-items-center">
+			<h5 class="text-center flex-grow-1 m-0">Messages</h5>
+			<button id="close-chat" class="btn-close" aria-label="Close"></button>
+		</div>
+		<div id="chat-list" class="chat-list overflow-auto"
+			style="max-height: 300px;"></div>
+	</div>
+
+	<!-- Chat Modal -->
+	<div class="modal fade" id="chatModal" tabindex="-1"
+		aria-labelledby="chat-modal-title" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-scrollable">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 id="chat-modal-title" class="modal-title">Chat</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<div id="chat-messages" class="chat-messages"></div>
+				</div>
+				<div class="modal-footer">
+					<input type="file" id="image-input"
+						class="form-control form-control-sm"> <input type="text"
+						id="message-input" class="form-control form-control-sm"
+						placeholder="Type a message...">
+					<button id="send-message" class="btn btn-primary btn-sm">Send</button>
+					<!-- Button to open Invoice Modal -->
+					<button id="create-invoice" class="btn btn-secondary btn-sm"
+						data-bs-toggle="modal" data-bs-target="#invoiceModal">
+						Create Invoice</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Invoice Modal -->
+	<div class="modal fade" id="invoiceModal" tabindex="-1"
+		aria-labelledby="invoice-modal-title" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 id="invoice-modal-title" class="modal-title">Create
+						Invoice</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="invoice-form">
+					
+						<!-- Product Selection -->
+						<div class="mb-3">
+						<div id="product-container">
+							<label for="product-select" class="form-label">Product</label> <select
+								id="product-select" class="form-select">
+								<!-- Options will be loaded from the database -->
+							</select>
+						</div>
+							<button type="button" id="add-product"
+								class="btn btn-sm btn-outline-primary mt-2">Create New
+								Select</button>
+						</div>
+						
+						<!-- Ordered & Delivered Date -->
+						<div class="mb-3">
+							<label for="ordered-date" class="form-label">Ordered Date</label>
+							<input type="date" id="ordered-date"
+								class="form-control">
+						</div>
+						<div class="mb-3">
+							<label for="delivered-date" class="form-label">Delivered
+								Date</label> <input type="date" id="delivered-date"
+								class="form-control">
+						</div>
+
+						<!-- Total Amount (Auto-calculated) -->
+						<div class="mb-3">
+							<label for="total-amount" class="form-label">Total Amount</label>
+							<input type="text" id="total-amount" class="form-control">
+						</div>
+
+						<!-- Payment Method -->
+						<div class="mb-3">
+							<label for="payment-method" class="form-label">Payment
+								Method</label> <select id="payment-method" class="form-select">
+								<!-- Options will be fetched from backend -->
+							</select>
+						</div>
+						
+						<!-- Submit Button -->
+						<button type="submit" class="btn btn-success">Submit
+							Invoice</button>
+							
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:inline="javascript">
+	        /*<![CDATA[*/
+	        const userId = /*[[${session.loggedInUser.userId}]]*/ null;
+	        /*]]>*/
+	    </script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+	<script th:src="@{/js/manuChat.js}"></script>
+
+	<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const orderedDateInput = document.getElementById("ordered-date");
+
+    // Get current date and time in the format required by datetime-local input
+    const now = new Date();
+    const formattedDateTime = now.toISOString().slice(0, 16); // "YYYY-MM-DDTHH:MM"
+
+    // Set the input value
+    orderedDateInput.value = formattedDateTime;
+});
+</script>
+</div>
+
+	<!-- <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const chatIcon = document.getElementById("chat-icon");
+    const chatBox = document.getElementById("chat-box");
+    const chatList = document.getElementById("chat-list");
+    const chatModal = new bootstrap.Modal(document.getElementById("chatModal"));
+    const chatMessages = document.getElementById("chat-messages");
+    const messageInput = document.getElementById("message-input");
+    const imageInput = document.getElementById("image-input");
+    const sendMessageBtn = document.getElementById("send-message");
+    let activeChatUserId = null;
+
+
+    // Variable to store the offset of the mouse when dragging starts
+let offsetX, offsetY, isDragging = false;
+
+
+
+// Mouse down event to start dragging
+chatIcon.addEventListener('mousedown', function(event) {
+    isDragging = true;
+    // Calculate the initial mouse offset relative to the top-left corner of the icon
+    offsetX = event.clientX - chatIcon.getBoundingClientRect().left;
+    offsetY = event.clientY - chatIcon.getBoundingClientRect().top;
+    // Change cursor to indicate dragging
+    chatIcon.style.cursor = 'grabbing';
+});
+
+// Mouse move event to move the icon when dragging
+document.addEventListener('mousemove', function(event) {
+    if (isDragging) {
+        // Update the position of the chat icon based on mouse movement
+        chatIcon.style.left = `${event.clientX - offsetX}px`;
+        chatIcon.style.top = `${event.clientY - offsetY}px`;
+    }
+});
+
+// Mouse up event to stop dragging
+document.addEventListener('mouseup', function() {
+    isDragging = false;
+    // Change cursor back to default
+    chatIcon.style.cursor = 'pointer';
+});
+
+    // CLOSE BUTTON
+    document.getElementById('close-chat').addEventListener('click', function () {
+        document.getElementById('chat-box').classList.add('d-none');
+    });
+
+    // Toggle chat box visibility
+    chatIcon.addEventListener("click", function () {
+        chatBox.classList.toggle("d-none");
+    });
+
+    // Mock chat notifications data
+    const mockChats = [
+        {
+            senderId: 1,
+            senderName: "John Doe",
+            profileImage: "https://via.placeholder.com/40",
+            latestMessage: "Hey, how's it going?",
+            unreadCount: 2
+        },
+        {
+            senderId: 2,
+            senderName: "Jane Smith",
+            profileImage: "https://via.placeholder.com/40",
+            latestMessage: "Are you coming to the meeting?",
+            unreadCount: 0
+        }
+    ];
+
+    // Render chat notifications
+    function renderChatNotifications(chats) {
+        chatList.innerHTML = "";
+        chats.forEach(chat => {
+            const chatItem = document.createElement("div");
+            chatItem.classList.add("chat-item", "d-flex", "align-items-center", "p-2", "border-bottom");
+            chatItem.innerHTML = `
+                <img src="${chat.profileImage}" class="chat-profile rounded-circle me-2" alt="Profile" width="40" height="40" />
+                <div class="chat-content flex-grow-1">
+                    <span class="chat-name fw-bold">${chat.senderName}</span>
+                    <p class="chat-preview text-muted small mb-0">${chat.latestMessage}</p>
+                </div>
+                ${chat.unreadCount > 0 ? `<span class="chat-badge badge bg-danger rounded-pill ms-2">${chat.unreadCount}</span>` : ""}
+            `;
+            chatItem.addEventListener("click", () => openChat(chat.senderId, chat.senderName));
+            chatList.appendChild(chatItem);
+        });
+    }
+
+    // Open chat function (show modal)
+    function openChat(senderId, senderName) {
+        activeChatUserId = senderId;
+        document.getElementById("chat-modal-title").innerText = `Chat with ${senderName}`;
+        chatMessages.innerHTML = ""; // Clear previous messages
+        chatModal.show();
+    }
+
+ // Send Message Function
+ sendMessageBtn.addEventListener("click", () => {
+        const messageText = messageInput.value;
+        const imageFile = imageInput.files[0];
+        if (messageText || imageFile) {
+            sendMessage(messageText, imageFile);
+        }
+    });
+
+    // Send Message Logic
+    function sendMessage(text, image) {
+        const messageDiv = document.createElement("div");
+        messageDiv.classList.add("message", "sent", "p-2", "border", "rounded", "mb-2");
+
+        if (text) {
+            messageDiv.innerHTML = `<p class="mb-0">${text}</p>`;
+        }
+
+        if (image) {
+            const imageElement = document.createElement("img");
+            imageElement.src = URL.createObjectURL(image);
+            imageElement.classList.add("img-fluid", "rounded");
+            messageDiv.appendChild(imageElement);
+        }
+
+        messageDiv.addEventListener("contextmenu", function (event) {
+            event.preventDefault();
+            showContextMenu(event, messageDiv);
+        });
+
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        messageInput.value = "";
+        imageInput.value = "";
+    }
+
+    // Right-click Context Menu
+    function showContextMenu(event, messageElement) {
+        // Remove existing menus
+        document.querySelectorAll(".context-menu").forEach(menu => menu.remove());
+
+        // Create the menu
+        const menu = document.createElement("div");
+        menu.classList.add("context-menu", "p-2", "bg-white", "shadow", "rounded", "border");
+        menu.style.position = "absolute";
+        menu.style.top = `${event.clientY}px`;
+        menu.style.left = `${event.clientX}px`;
+        menu.style.zIndex = "1000";
+        menu.innerHTML = `
+            <button class="dropdown-item" onclick="editMessage(event, messageElement)">✏️ Edit</button>
+            <button class="dropdown-item" onclick="pinMessage(event, messageElement)">📌 Pin</button>
+            <button class="dropdown-item text-danger" onclick="deleteMessage(event, messageElement)">🗑 Delete</button>
+        `;
+
+        document.body.appendChild(menu);
+
+        // Remove menu on outside click
+        document.addEventListener("click", function removeMenu() {
+            menu.remove();
+            document.removeEventListener("click", removeMenu);
+        }, { once: true });
+    }
+
+    // Edit Message
+    window.editMessage = function (event, messageElement) {
+        const newText = prompt("Edit your message:", messageElement.innerText);
+        if (newText) {
+            messageElement.innerHTML = `<p class="mb-0">${newText}</p>`;
+        }
+    };
+
+    // Pin Message
+    window.pinMessage = function (event, messageElement) {
+        messageElement.classList.toggle("border-primary");
+        messageElement.classList.toggle("fw-bold");
+    };
+
+    // Delete Message
+    window.deleteMessage = function (event, messageElement) {
+        messageElement.remove();
+    };
+
+    // Load mock data
+    renderChatNotifications(mockChats);
+});
+
+
+    </script> -->
+
+</body>
+</html>

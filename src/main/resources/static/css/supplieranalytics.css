@@ -1,0 +1,13 @@
+@charset "UTF-8";
+.card-custom {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  .table-custom thead th {
+    background-color: #6c757d;
+    color: white;
+  }
+  .chart-container {
+    position: relative;
+    height: 50vh;
+  }

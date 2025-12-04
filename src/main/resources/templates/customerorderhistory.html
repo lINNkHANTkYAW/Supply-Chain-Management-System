@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Order History</title>
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<link rel="stylesheet" th:href="@{/css/customerorderhistory.css}">
+</head>
+<body>
+	<div class="container mt-5">
+		<a class="btn btn-secondary" th:href="@{/customer-dashboard}">Back</a>
+	</div>
+
+	<div class="container mt-5">
+		<h2>Order History</h2>
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Order ID</th>
+					<th>Date</th>
+					<th>Product</th>
+					<th>Quantity</th>
+					<th>Price</th>
+					<th>Total</th>
+					<th>Payment Method</th>
+					<th>Status</th>
+					<th>Deliver Status</th>
+					<th>Transaction Status</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody id="orderHistoryTable">
+			
+			</tbody>
+
+
+
+		</table>
+	</div>
+
+	<!-- Product Details Modal -->
+	<div class="modal fade" id="productDetailsModal" tabindex="-1"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Product Details</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="productDetails">
+					<!-- Product details will be loaded here -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Seller Profile Modal -->
+	<div class="modal fade" id="sellerProfileModal" tabindex="-1"
+		aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Seller Profile</h5>
+					<button type="button" class="btn-close" data-bs-dismiss="modal"
+						aria-label="Close"></button>
+				</div>
+				<div class="modal-body" id="sellerProfile">
+					<!-- Seller profile will be loaded here -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<script th:src="@{/js/customerorderhistory.js}"></script>
+	<script th:src="@{https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

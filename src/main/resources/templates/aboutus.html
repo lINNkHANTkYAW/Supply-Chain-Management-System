@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - Supply Chain Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJ2QY3fHhJ9D9NwANXI4kc1y2xw2bI5bKwWlkgK+6ZR0aXaym55C8QX4v4f4" crossorigin="anonymous">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      color: #333;
+      font-family: 'Arial', sans-serif;
+    }
+    /* Header */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111651;
+}
+
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+a:hover{
+  color: #FF6F00;
+}
+
+nav a.active {
+    color: #FF6F00;
+}
+
+    /* Main Section Styling */
+    .main-section {
+      padding: 80px 0;
+      background-color: #000;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      text-align: center;
+    }
+
+    .main-section h1 {
+      font-size: 3rem;
+      font-weight: 700;
+    }
+
+    .main-section p {
+      font-size: 1.2rem;
+      font-weight: 300;
+    }
+
+    /* About Content Section Styling */
+    .about-content {
+      background-color: white;
+      color: #333;
+      padding: 60px 20px;
+      margin-top: -20px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-content h2 {
+      font-size: 2rem;
+      color: #333;
+      margin-bottom: 30px;
+      font-weight: 700;
+    }
+
+    .about-content p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    /* Team Section Styling */
+    .team-section {
+      background-color: #f8f9fa;
+      padding: 60px 20px;
+    }
+
+    .team-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .team-member {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .team-member img {
+      border-radius: 50%;
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .team-member h4 {
+      margin-top: 15px;
+      font-size: 1.6rem;
+      color: #333;
+    }
+
+    .team-member p {
+      font-size: 1.1rem;
+      color: #666;
+      margin-top: 10px;
+    }
+
+    /* Vision Section Styling */
+    .vision-section {
+      background-color: #000;
+      color: white;
+      padding: 60px 20px;
+    }
+
+    .vision-section h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 40px;
+    }
+
+    .vision-section p {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #bbb;
+    }
+
+    /* Animation Keyframes */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInRight {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Animation Classes */
+    .fade-in-up {
+      animation: fadeInUp 1s ease-out;
+    }
+
+    .fade-in-left {
+      animation: fadeInLeft 1s ease-out;
+    }
+
+    .fade-in-right {
+      animation: fadeInRight 1s ease-out;
+    }
+
+    /* Initially hide elements */
+    .animate-on-scroll {
+      opacity: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Main Section -->
+  <div class="main-section">
+    <div class="container">
+      <header style="margin-right: 20px;">
+        <div class=" d-none"></div>
+        
+    </header>
+      <h1 class="animate-on-scroll">About Us</h1>
+      <p class="animate-on-scroll">We are students from the University of Information Technology Yangon. We proudly present our Supply Chain Management System.</p>
+    </div>
+  </div>
+
+  <!-- About Content Section -->
+  <div class="about-content">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Our Mission</h2>
+      <p class="lead text-center mb-5 animate-on-scroll">
+        Our mission is to revolutionize the way supply chain management operates. We aim to streamline logistics, enhance communication between distributors and customers, and introduce innovative technologies that boost efficiency and transparency.
+      </p>
+
+      <h2 class="text-center animate-on-scroll">What We Do</h2>
+      <p class="animate-on-scroll">
+        The Supply Chain Management System is an all-encompassing platform that helps manage the flow of goods, services, and data from suppliers to customers. From inventory tracking to order management and real-time updates, our system ensures that businesses can streamline their operations.
+        Our team has built this system from the ground up, ensuring that each feature contributes to the overall goal of making supply chains more effective, transparent, and adaptable to modern business needs. Our platform offers:
+      </p>
+      <ul class="animate-on-scroll">
+        <li><strong>Inventory Management:</strong> Track products in real-time and manage stock effectively.</li>
+        <li><strong>Order Management:</strong> Simplified order placement, tracking, and fulfillment processes.</li>
+        <li><strong>Supplier-Distributor Communication:</strong> Seamless interaction between distributors and customers through an integrated chat system.</li>
+        <li><strong>Real-time Updates:</strong> Keep users informed about the latest supply chain developments.</li>
+        <li><strong>Custom Analytics:</strong> Track key performance metrics to ensure efficiency at all levels.</li>
+      </ul>
+
+      <h2 class="text-center animate-on-scroll">Why Choose Our System?</h2>
+      <p class="animate-on-scroll">
+        Our Supply Chain Management System stands out because of its ability to integrate multiple features into one easy-to-use platform. Whether you’re a supplier, distributor, or customer, our system’s flexibility allows it to adapt to the specific needs of each user. We offer a high degree of customization, real-time data synchronization, and a simple user interface.
+      </p>
+    </div>
+  </div>
+
+  <!-- Team Section -->
+  <div class="team-section">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Meet Our Team</h2>
+      <div class="row ">
+        <div class="col-md-4 team-member animate-on-scroll">
+          <img src="https://via.placeholder.com/150" alt="Member 1">
+          <h4>Linn Khant Kyaw</h4>
+          <p>Lead Developer</p>
+          <p>the mastermind behind our system's core functionality and backend architecture. brings years of experience in software development and is passionate about creating scalable, efficient solutions.</p>
+        </div>
+        <div class="col-md-4 team-member animate-on-scroll">
+          <img src="https://via.placeholder.com/150" alt="Member 2">
+          <h4>Sai Kyaw Htet Linn</h4>
+          <p>Frontend Developer</p>
+          <p> responsible for designing and developing the user interface. committed to making the system as user-friendly and intuitive as possible, with a focus on providing a seamless user experience.</p>
+        </div>
+        <div class="col-md-4 team-member animate-on-scroll">
+          <img src="https://via.placeholder.com/150" alt="Member 3">
+          <h4>Phyu Sin Thant</h4>
+          <p>Backend Developer</p>
+          <p> works on the server-side aspects of our system, ensuring that the backend is robust, scalable, and able to handle large volumes of data. focus is on ensuring data integrity and optimal system performance.</p>
+        </div>
+        <div class="col-md-4 team-member animate-on-scroll">
+          <img src="https://via.placeholder.com/150" alt="Member 4">
+          <h4>Yoon Mi Linn</h4>
+          <p>UI/UX Designer</p>
+          <p>dedicated to creating an aesthetically pleasing and easy-to-navigate user interface. attention to detail ensures that our system not only functions well but also provides a great user experience.</p>
+        </div>
+        <div class="col-md-4 team-member animate-on-scroll">
+          <img src="https://via.placeholder.com/150" alt="Member 5">
+          <h4>Thiri Shwe Sin Tun</h4>
+          <p>Project Manager</p>
+          <p>keeps the team organized and on schedule. With background in project management, ensures that the system is developed on time and aligns with the team’s goals and vision.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vision Section -->
+  <div class="vision-section">
+    <div class="container">
+      <h2 class="text-center animate-on-scroll">Our Vision for the Future</h2>
+      <p class="animate-on-scroll">
+        As a forward-thinking team, we are constantly improving our system to stay ahead of industry trends. We envision our supply chain management system as the ultimate tool for businesses to gain visibility and control over their entire supply chain process. By using data analytics and machine learning, we plan to take our system beyond just an operational tool – making it a strategic asset that can help drive decision-making and foster growth.
+      </p>
+      <p class="animate-on-scroll">
+        Looking ahead, we want our system to be a global leader in supply chain solutions, helping businesses across industries navigate complex logistical challenges and drive operational excellence.
+      </p>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0p5nn1m5gdd+ntQg8VvvMVE9zv5K5e5+kR42lI8qD3TAK9VZ" crossorigin="anonymous"></script>
+  <script>
+   document.addEventListener('DOMContentLoaded', () => {
+  const animateElements = document.querySelectorAll('.animate-on-scroll');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const element = entry.target;
+        const animationType = element.dataset.animation || 'fade-in-up';
+        element.classList.add(animationType);
+        element.style.opacity = 1;
+      } else {
+        // Reset the animation when the element is out of view
+        const element = entry.target;
+        const animationType = element.dataset.animation || 'fade-in-up';
+        element.classList.remove(animationType);
+        element.style.opacity = 0;
+      }
+    });
+  }, {
+    threshold: 0.1 // Trigger when 10% of the element is visible
+  });
+
+  animateElements.forEach(element => {
+    observer.observe(element);
+  });
+});
+  </script>
+</body>
+</html>
